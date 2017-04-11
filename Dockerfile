@@ -89,4 +89,10 @@ RUN mkdir -p .yardoc \
 
 USER docker
 # TODO: switch to canvas:compile_assets_dev once we stop using this Dockerfile in production/e2e
+ARG compile_assets=1
+ENV COMPILE_ASSETS_CSS ${compile_assets}
+ENV COMPILE_ASSETS_STYLEGUIDE ${compile_assets}
+ENV COMPILE_ASSETS_BUILD_CLIENT_APPS ${compile_assets}
+ENV COMPILE_ASSETS_BUILD_JS ${compile_assets}
+ENV COMPILE_ASSETS_API_DOCS ${compile_assets}
 RUN COMPILE_ASSETS_NPM_INSTALL=0 bundle exec rake canvas:compile_assets

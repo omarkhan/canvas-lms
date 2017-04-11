@@ -23,6 +23,7 @@ namespace :canvas do
     npm_install = ENV["COMPILE_ASSETS_NPM_INSTALL"] != "0"
     compile_css = ENV["COMPILE_ASSETS_CSS"] != "0"
     build_styleguide = ENV["COMPILE_ASSETS_STYLEGUIDE"] != "0"
+    build_client_apps = ENV["COMPILE_ASSETS_BUILD_CLIENT_APPS"] != "0"
     build_webpack = ENV["COMPILE_ASSETS_BUILD_JS"] != "0"
     build_api_docs = ENV["COMPILE_ASSETS_API_DOCS"] != "0"
 
@@ -49,7 +50,7 @@ namespace :canvas do
       }
     end
 
-    Rake::Task['js:build_client_apps'].invoke
+    Rake::Task['js:build_client_apps'].invoke if build_client_apps
 
     generate_tasks = []
     generate_tasks << 'i18n:generate_js' if build_webpack

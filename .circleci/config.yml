@@ -1,0 +1,28 @@
+version: 2
+jobs:
+  build:
+    parallelism: 4
+    working_directory: ~/canvas-lms
+    docker:
+      - image: docker/compose:1.12.0
+    environment:
+      COMPOSE_FILE: docker-compose.yml:docker-compose.circleci.yml
+    steps:
+      - checkout
+      - setup_remote_docker:
+          reusable: true
+          exclusive: true
+      - run:
+          name: Build containers
+          command: |
+            cp docker-compose/config/* config/
+            docker-compose build --pull --build-arg compile_assets=0 web
+      - run:
+          name: Set up database
+          command: |
+            docker-compose run --rm web bundle exec rake db:create RAILS_ENV=test
+            docker-compose run --rm web bundle exec rake db:migrate RAILS_ENV=test
+      - run:
+          name: Run tests
+          command: |
+            docker-compose run --rm web bundle exec rspec $(circleci tests glob 'spec/{apis,controllers,gem_integration,helpers,initializers,integration,lib,messages,middleware,migrations,models,observers,presenters,serializers,views}/**/*_spec.rb' | circleci tests split --split-by=timings)

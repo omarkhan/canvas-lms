@@ -1,0 +1,13 @@
+# See doc/docker/README.md or https://github.com/instructure/canvas-lms/tree/master/doc/docker
+version: '2'
+services:
+  jobs: &BASE
+    build:
+      context: .
+    environment: &BASE-ENV
+      ENCRYPTION_KEY: facdd3a131ddd8988b14f6e4e01039c93cfa0160
+
+  web:
+    <<: *BASE
+    environment:
+      <<: *BASE-ENV
